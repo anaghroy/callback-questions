@@ -1,4 +1,4 @@
-// Create a simple promise that resolves with "Success!" after 1 second.
+// // Create a simple promise that resolves with "Success!" after 1 second.
 
 let mypromise = new Promise((resolve, reject) => {
   setTimeout(() => {
@@ -62,6 +62,100 @@ divide(66, 3)
   .then((msg) => console.log("Result: ", msg))
   .catch((msg) => console.log("Error: ", msg));
 
+// Level 3: Sequential with Timing Display
+
+// Timed execution tracker: Create three functions that resolve after different times:
+
+// task1() - 1 second - "Task 1 done"
+// task2() - 2 seconds - "Task 2 done"
+// task3() - 1 second - "Task 3 done"
+// Log the start time, then log each completion with elapsed time
+
+function task1() {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res("First timer execution");
+    });
+  });
+}
+function task2() {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res("Second timer execution");
+    });
+  });
+}
+function task3() {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res("Third timer execution");
+    });
+  });
+}
+async function TimerTracker() {
+  try {
+    const step1 = await task1();
+    console.log(step1);
+    const step2 = await task2();
+    console.log(step2);
+    const step3 = await task3();
+    console.log(step3);
+  } catch (error) {
+    console.error("Something went wrong :", error);
+  }
+}
+TimerTracker();
+// Multi-stage game loading: Create functions:
+
+// loadAssets() - 2 seconds - "Assets loaded (2s)"
+// initializeGame() - 1 second - "Game initialized (1s)"
+// startGame() - 1 second - "Game started (1s)"
+// Display total loading time at the end
+
+function loadAssets() {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res("🔖 Assest loaded (2s)");
+    }, 2000);
+  });
+}
+function initializeGame() {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res("👉 Game initialized (1s)");
+    }, 1000);
+  });
+}
+function startGame() {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res("🏑 Game started (1s)");
+    }, 1000);
+  });
+}
+async function multiStage() {
+  console.log("🎮 Starting game loading...");
+
+  const startTime = Date.now();
+  try {
+    const step1 = await loadAssets();
+    console.log(step1);
+    const step2 = await initializeGame();
+    console.log(step2);
+    const step3 = await startGame();
+    console.log(step3);
+
+    const endTime = Date.now();
+    const totalTime = (endTime - startTime) / 1000;
+
+    console.log(`\n⏱️ Total loading time: ${totalTime} seconds`);
+    console.log("🔖 Game ready to play!");
+  } catch (error) {
+    console.log("🔒 Something went wrong:", error);
+  }
+}
+multiStage();
+
 // Chain promises: Create a promise that:
 // Resolves with 5
 // In .then(), multiply by 2
@@ -82,11 +176,12 @@ promise
     console.log(`Final result: ${final}`);
   });
 
-//   Simulate fetching data from an API: Create a function fetchUserData(userId) that:
+// Simulate fetching data from an API: Create a function fetchUserData(userId) that:
 
 // Returns a promise
 // After 2 seconds, resolves with {id: userId, name: "John", age: 25}
 // Use async/await to fetch and display the data
+
 function fetchUserData(userId) {
   return new Promise((res, rej) => {
     setTimeout(() => {
@@ -104,12 +199,210 @@ async function showData() {
 }
 showData();
 
+// Level 4: Sequential with Error Handling
+
+// Safe sequential execution: Create three functions:
+
+// step1() - resolves after 1 second
+// step2() - rejects with "Step 2 failed!" after 1 second
+// step3() - resolves after 1 second
+// Use try/catch to handle the error and log which step failed
+function step1() {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res("☑️ Completed after 1 seconds");
+    }, 1000);
+  });
+}
+function step2() {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res("📕 Step 2 failed!");
+    }, 1000);
+  });
+}
+function step3() {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res("🔰 Completed after 1 seconds");
+    }, 1000);
+  });
+}
+async function Safe() {
+  try {
+    const task1 = await step1();
+    console.log(task1);
+    const task2 = await step2();
+    console.log(task2);
+    const task3 = await step3();
+    console.log(task3);
+  } catch (error) {
+    console.error("🔒 Something went wrong", error);
+  }
+}
+// Safe()
+// API call chain with fallback: Create functions:
+
+// fetchUserData(id) - may reject with "User not found"
+// fetchUserPosts(userId) - may reject with "Posts unavailable"
+// fetchComments(postId) - may reject with "Comments unavailable"
+// Handle each possible error appropriately
+function fetchUserData(id) {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      const success = Math.floor(Math.random() * 10) > 0.3;
+      if (success) {
+        res({ id: id, name: "Anagh Roy", email: "anagh33@roy.com" });
+      } else {
+        rej("👤User not found");
+      }
+    }, 1000);
+  });
+}
+function fetchUserPosts(userId) {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      const success = Math.floor(Math.random() * 10) > 0.3;
+      if (success) {
+        res([
+          { postId: 1, title: "First Post", userId: userId },
+          { postId: 2, title: "Second Post", userId: userId },
+        ]);
+      } else {
+        rej("🚩 Posts unavailable");
+      }
+    }, 1000);
+  });
+}
+function fetchComments(postId) {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      const success = Math.floor(Math.random() * 10) > 0.3;
+      if (success) {
+        res([
+          { commentId: 1, title: "Greate post!", postId: postId },
+          { commentId: 2, title: "Thanks for sharing", postId: postId },
+        ]);
+      } else {
+        rej("🚩 Comments unavailable");
+      }
+    }, 1000);
+  });
+}
+async function fetchData(userId) {
+  console.log("🔄 Starting API call chain...\n");
+
+  let userData;
+  try {
+    userData = await fetchUserData(userId)
+    console.log("User data:", userData)
+  } catch (error) {
+    console.error("🎟️ Error fetching user:", error);
+    console.log("🔄 Using fallback: Guest user");
+    userData = { id: userId, name: "Guest User", email: "guest@example.com" };
+  }
+
+  let userPosts
+  try {
+    userPosts = await fetchUserPosts(userData.id)
+    console.log("💗 User posts:", userPosts)
+  } catch (error) {
+    console.error("🎟️ Error fetching user:", error);
+    console.log("🔄 Using fallback: Empty posts");
+    userPosts = []
+  }
+}
+
+async function fetchDataStrict(userId) {
+  console.log("🔄 Starting strict API call chain...\n");
+  
+  try {
+    const userData = await fetchUserData(userId);
+    console.log("✅ User data:", userData);
+    
+    const userPosts = await fetchUserPosts(userData.id);
+    console.log("✅ User posts:", userPosts);
+    
+    if (userPosts.length > 0) {
+      const comments = await fetchComments(userPosts[0].postId);
+      console.log("✅ Comments:", comments);
+      
+      console.log("\n✅ All data fetched successfully!");
+    } else {
+      console.log("⚠️ No posts to fetch comments for");
+    }
+    
+  } catch (error) {
+    console.error("\n💥 Chain stopped due to error:", error);
+    console.log("🛑 Unable to continue without required data");
+  }
+}
+async function fetchDataCollectErrors(userId) {
+  console.log("🔄 Starting API call chain (collecting errors)...\n");
+  
+  const errors = [];
+  let userData = null;
+  let userPosts = [];
+  let comments = [];
+  
+  // Try to fetch user
+  try {
+    userData = await fetchUserData(userId);
+    console.log("✅ User data:", userData);
+  } catch (error) {
+    errors.push({ step: "fetchUserData", error });
+    console.error("❌ User fetch failed:", error);
+    userData = { id: userId, name: "Guest" };
+  }
+  
+  // Try to fetch posts
+  try {
+    userPosts = await fetchUserPosts(userData.id);
+    console.log("✅ User posts:", userPosts);
+  } catch (error) {
+    errors.push({ step: "fetchUserPosts", error });
+    console.error("❌ Posts fetch failed:", error);
+  }
+  
+  // Try to fetch comments
+  if (userPosts.length > 0) {
+    try {
+      comments = await fetchComments(userPosts[0].postId);
+      console.log("✅ Comments:", comments);
+    } catch (error) {
+      errors.push({ step: "fetchComments", error });
+      console.error("❌ Comments fetch failed:", error);
+    }
+  }
+  
+  console.log("Errors encountered:", errors.length);
+  if (errors.length > 0) {
+    console.log("Failed steps:", errors.map(e => e.step));
+  }
+  console.log("Final data:", { userData, userPosts, comments });
+}
+console.log("=== APPROACH 1: Fallback for each error ===\n");
+fetchData(123)
+console.log("=== APPROACH 2: Fallback for each error ===\n");
+fetchDataStrict(123)
+console.log("=== APPROACH 3: Fallback for each error ===\n");
+fetchDataCollectErrors(123)
+
+// Payment processing with validation: Create functions:
+
+// validateCard(cardNumber) - rejects if cardNumber < 1000
+// chargeCard(amount) - rejects if amount > 1000
+// sendReceipt(email) - always succeeds
+// Handle errors and log appropriate messages
+
+// Level 5: Complex Sequential Flows
 // Sequential promises: Create three functions that each return a promise:
 
 // step1() - resolves with "Step 1 complete" after 1 second
 // step2() - resolves with "Step 2 complete" after 1 second
 // step3() - resolves with "Step 3 complete" after 1 second
 // Call them in sequence using async/await
+
 function step1() {
   return new Promise((res, rej) => {
     setTimeout(() => {
@@ -190,12 +483,14 @@ async function showmsg() {
   }
 }
 showmsg();
+
 // Cooking recipe: Create functions that simulate cooking steps:
 
 // boilWater() - resolves with "Water boiled" after 3 seconds
 // addPasta() - resolves with "Pasta added" after 1 second
 // drain() - resolves with "Pasta drained" after 2 seconds
 // Run them sequentially
+
 function boilWater() {
   return new Promise((res, rej) => {
     setTimeout(() => {
