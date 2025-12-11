@@ -1,4 +1,4 @@
-// // Create a simple promise that resolves with "Success!" after 1 second.
+// Create a simple promise that resolves with "Success!" after 1 second.
 
 let mypromise = new Promise((resolve, reject) => {
   setTimeout(() => {
@@ -240,7 +240,7 @@ async function Safe() {
     console.error("🔒 Something went wrong", error);
   }
 }
-// Safe()
+Safe()
 // API call chain with fallback: Create functions:
 
 // fetchUserData(id) - may reject with "User not found"
@@ -746,3 +746,5 @@ async function pipeline() {
   }
 }
 pipeline();
+
+// https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apikey}
